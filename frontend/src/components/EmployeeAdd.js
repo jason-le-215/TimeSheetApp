@@ -3,20 +3,26 @@ import { Button, TextField, MenuItem, Stack } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 
-const genders = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
+const positions = [
+  { value: "Director", label: "Director" },
+  { value: "Engineer", label: "Engineer" },
+  { value: "Drafter", label: "Drafter" },
+  { value: "Admin", label: "Admin" },
 ];
 
-const AddEmployee = ({ loadAllEmployees }) => {
+const EmployeeAdd = ({ loadAllEmployees }) => {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
-  const [gender, setGender] = useState("");
+  const [position, setPosition] = useState("");
 
-  const addNewEmployee = async () => {
-    const newEmployee = { firstname, lastname, gender };
+  const addNewEmployee = async (e) => {
+    e.preventDefault();
+    const newEmployee = { firstname, lastname, position };
     await axios.post("http://localhost:3001/api/v1/employees", newEmployee);
     await loadAllEmployees();
+    setFirstName("");
+    setLastName("");
+    setPosition("");
   };
 
   return (
@@ -39,20 +45,20 @@ const AddEmployee = ({ loadAllEmployees }) => {
           />
           <TextField
             select
-            label="Gender"
+            label="Positon"
             size="small"
             fullWidth
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
           >
-            {genders.map((g) => (
-              <MenuItem key={g.value} value={g.value}>
-                {g.label}
+            {positions.map((p) => (
+              <MenuItem key={p.value} value={p.value}>
+                {p.label}
               </MenuItem>
             ))}
           </TextField>
           <Button type="submit" variant="contained">
-            Submit
+            Add
           </Button>
         </Stack>
       </form>
@@ -60,4 +66,4 @@ const AddEmployee = ({ loadAllEmployees }) => {
   );
 };
 
-export default AddEmployee;
+export default EmployeeAdd;

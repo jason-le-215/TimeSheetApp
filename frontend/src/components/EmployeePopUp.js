@@ -8,6 +8,10 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import EmployeeEdit from "./EmployeeEdit";
+import { Stack } from "@mui/system";
+import EmployeeList from "./EmployeeList";
+import EmployeeProjectList from "./EmployeeProjectList";
 
 const EmployeePopUp = ({
   selectedEmployeeId,
@@ -15,18 +19,32 @@ const EmployeePopUp = ({
   setSelectedEmployeeId,
 }) => {
   const [employee, setEmployee] = useState(null);
+  const [showEditEmployee, setshowEditEmployee] = useState(false);
+
+  const [projectList, setProjectList] = useState([]);
+
+  const getAllProjects = async () => {
+    const response = await axios.get("http://localhost:3001/api/v1/projects");
+    setProjectList(response.data);
+  };
+  useEffect(() => {
+    getAllProjects();
+  }, []);
+  const [linkedproject, setLinkedProject] = useState(null);
+  const [unlinkedproject, setUnlinkedProject] = useState(null);
+
+  const loadEmployeePopUp = async () => {
+    if (!selectedEmployeeId) {
+      return;
+    }
+    const response = await axios.get(
+      `http://localhost:3001/api/v1/employees/${selectedEmployeeId}`
+    );
+    setEmployee(response.data);
+  };
 
   useEffect(() => {
-    const fn = async () => {
-      if (!selectedEmployeeId) {
-        return;
-      }
-      const response = await axios.get(
-        `http://localhost:3001/api/v1/employees/${selectedEmployeeId}`
-      );
-      setEmployee(response.data);
-    };
-    fn();
+    loadEmployeePopUp();
   }, [selectedEmployeeId]);
 
   const deleteEmployee = async () => {
@@ -37,8 +55,23 @@ const EmployeePopUp = ({
     setEmployee(null);
   };
 
+  const linkProject = async () => {
+    await axios.put(
+      `http://localhost:3001/api/v1/employees_projects/link/${selectedEmployeeId}/${linkedproject._id}`
+    );
+    await loadEmployeePopUp();
+    setLinkedProject(null);
+  };
+
+  const unlinkProject = async (project) => {
+    await axios.put(
+      `http://localhost:3001/api/v1/employees_projects/unlink/${selectedEmployeeId}/${project._id}`
+    );
+    await loadEmployeePopUp();
+  };
+
   if (!employee) {
-    return <p>No employee selected</p>;
+    return null;
   }
 
   return (
@@ -48,18 +81,51 @@ const EmployeePopUp = ({
       open={Boolean(selectedEmployeeId)}
       onClose={() => {
         setSelectedEmployeeId();
+        setshowEditEmployee(false);
       }}
     >
-      <DialogTitle>
+      <DialogTitle fontWeight="bold" variant="h4">
         {employee.firstname} {employee.lastname}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>Gender: {employee.gender}</DialogContentText>
+        <Stack spacing={3}>
+          <DialogContentText>Position: {employee.position}</DialogContentText>
+          <EmployeeProjectList
+            employee={employee}
+            projectList={projectList}
+            linkedproject={linkedproject}
+            setLinkedProject={setLinkedProject}
+            linkProject={linkProject}
+            unlinkProject={unlinkProject}
+            unlinkedproject={unlinkedproject}
+            setUnlinkedProject={setUnlinkedProject}
+          />
+          {showEditEmployee && (
+            <EmployeeEdit
+              selectedEmployeeId={selectedEmployeeId}
+              loadAllEmployees={loadAllEmployees}
+              loadEmployeePopUp={loadEmployeePopUp}
+              employee={employee}
+            />
+          )}
+        </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={deleteEmployee} color="error" variant="outlined">
-          Delete
-        </Button>
+        <Stack direction="row" spacing={2} justifyContent="flex-end">
+          <Button
+            onClick={() => {
+              setshowEditEmployee(!showEditEmployee);
+            }}
+            color="primary"
+            variant="outlined"
+          >
+            Edit
+          </Button>
+
+          <Button onClick={deleteEmployee} color="error" variant="outlined">
+            Delete
+          </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );

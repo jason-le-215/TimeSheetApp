@@ -1,40 +1,21 @@
 import { useState, useEffect } from "react";
+import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Header from "./components/Header";
-import EmployeeList from "./components/EmployeeList";
-import EmployeePopUp from "./components/EmployeePopUp";
-import axios from "axios";
 import { Container } from "@mui/material";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import Employees from "./components/Employees";
+import Projects from "./components/Projects";
 
 function App() {
-  const [employeeList, setEmployeeList] = useState([]);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState();
-
-  const loadAllEmployees = async () => {
-    const response = await axios.get("http://localhost:3001/api/v1/employees");
-    setEmployeeList(response.data);
-  };
-
-  useEffect(() => {
-    loadAllEmployees();
-  }, []);
-
-  const showEmployeePopUp = (id) => {
-    setSelectedEmployeeId(id);
-  };
-
   return (
-    <Container maxWidth="sm">
-      <Header />
-      <EmployeeList
-        employeeList={employeeList}
-        onEmployeePopUp={showEmployeePopUp}
-      />
-      <EmployeePopUp
-        selectedEmployeeId={selectedEmployeeId}
-        setSelectedEmployeeId={setSelectedEmployeeId}
-        loadAllEmployees={loadAllEmployees}
-      />
+    <Container maxWidth={false} disableGutters={true}>
+      <Navbar sx={{ padding: 2 }} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="Employees" element={<Employees />} />
+        <Route path="Projects" element={<Projects />} />
+      </Routes>
     </Container>
   );
 }

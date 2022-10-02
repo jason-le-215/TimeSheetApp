@@ -1,12 +1,13 @@
 import Button from "@mui/material/Button";
-const Employee = ({ employee, onEmployeePopUp }) => {
+
+const EmployeeButon = ({ employee, onEmployeePopUp }) => {
   return (
     <div onClick={() => onEmployeePopUp(employee._id)}>
-      <Button>
-        {employee.firstname} {employee.lastname} ({employee.gender})
+      <Button sx={{ fontWeight: "medium" }}>
+        {employee.firstname} {employee.lastname}
       </Button>
     </div>
   );
 };
 
-export default Employee;
+export default EmployeeButon;
