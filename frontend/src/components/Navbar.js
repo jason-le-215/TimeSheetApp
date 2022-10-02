@@ -13,6 +13,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
+import logo from "../rincovitch_logo.png";
+import { width } from "@mui/system";
 
 const pages = ["Projects", "Employees", "Timesheet"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -40,7 +42,14 @@ const ResponsiveAppBar = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <Link to={`/`}>
+            <Box
+              component="img"
+              alt="Rincovitch Logo"
+              src={logo}
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1, width: "50px" }}
+            />
+          </Link>
           <Typography
             variant="h6"
             noWrap
@@ -102,7 +111,15 @@ const ResponsiveAppBar = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Link to={`/`}>
+            <Box
+              component="img"
+              alt="Rincovitch Logo"
+              src={logo}
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1, width: "50px" }}
+              to={`/`}
+            />
+          </Link>
           <Typography
             variant="h5"
             noWrap

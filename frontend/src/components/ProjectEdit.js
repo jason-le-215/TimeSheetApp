@@ -35,7 +35,7 @@ const ProjectEdit = ({
   return (
     <div>
       <Stack spacing={2}>
-        <Typography variant="h6">Update Employee Information</Typography>
+        <Typography variant="h6">Update Project Information</Typography>
 
         <TextField
           label="Project Number"
