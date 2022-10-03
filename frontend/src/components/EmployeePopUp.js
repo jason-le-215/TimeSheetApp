@@ -20,7 +20,6 @@ const EmployeePopUp = ({
 }) => {
   const [employee, setEmployee] = useState(null);
   const [showEditEmployee, setshowEditEmployee] = useState(false);
-
   const [projectList, setProjectList] = useState([]);
 
   const getAllProjects = async () => {
@@ -57,7 +56,7 @@ const EmployeePopUp = ({
 
   const linkProject = async () => {
     await axios.put(
-      `http://localhost:3001/api/v1/employees_projects/link/${selectedEmployeeId}/${linkedproject._id}`
+      `http://localhost:3001/api/v1/employees/${selectedEmployeeId}/projects/${linkedproject._id}/link`
     );
     await loadEmployeePopUp();
     setLinkedProject(null);
@@ -65,7 +64,7 @@ const EmployeePopUp = ({
 
   const unlinkProject = async (project) => {
     await axios.put(
-      `http://localhost:3001/api/v1/employees_projects/unlink/${selectedEmployeeId}/${project._id}`
+      `http://localhost:3001/api/v1/employees/${selectedEmployeeId}/projects/${project._id}/unlink`
     );
     await loadEmployeePopUp();
   };
